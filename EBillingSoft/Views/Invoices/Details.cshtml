@@ -1,0 +1,14 @@
+﻿@model EBillingSoft.Models.Invoice
+
+@{
+    ViewBag.Title = "Invoice Details";
+}
+
+<h2>Invoice Details</h2>
+
+<p><strong>Invoice ID:</strong> @Model.invoice_id</p>
+<p><strong>Invoice Date:</strong> @Model.invoice_date</p>
+<p><strong>Customer Name:</strong> @Model.customer_name</p>
+<p><strong>Total Amount:</strong> @Model.total_amount</p>
+
+@Html.ActionLink("Back to Invoices", "Index")

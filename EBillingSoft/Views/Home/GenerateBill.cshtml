@@ -1,0 +1,29 @@
+﻿@model EBillingSoft.Models.Product
+@{
+    ViewBag.Title = "Generate Bill";
+}
+
+<h2>Generate Bill</h2>
+
+@using (Html.BeginForm("GenerateBill", "Home", FormMethod.Post))
+{
+    @Html.AntiForgeryToken() 
+
+    <div class="form-group">
+        <label for="CustomerName">Customer Name</label>
+        <input type="text" name="customerName" class="form-control" required />
+    </div>
+
+    
+    <div class="form-group">
+        <label for="ProductIds">Select Products</label>
+        @Html.DropDownListFor(model => model.product_id, ViewBag.Products as SelectList, "Select Product", new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        <label for="Quantities">Enter Quantity</label>
+        <input type="number" name="quantities" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Generate Invoice</button>
+}

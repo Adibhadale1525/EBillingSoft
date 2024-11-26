@@ -1,0 +1,34 @@
+﻿@model IEnumerable<EBillingSoft.Models.InvoiceDetail>
+
+@{
+    ViewBag.Title = "Invoice Details";
+}
+
+<h2>Invoice Details</h2>
+<p><strong>Invoice ID:</strong> @ViewBag.Invoice.invoice_id</p>
+<p><strong>Customer Name:</strong> @ViewBag.Invoice.customer_name</p>
+<p><strong>Invoice Date:</strong> @ViewBag.Invoice.invoice_date</p>
+<p><strong>Total Amount:</strong> @ViewBag.Invoice.total_amount</p>
+
+<h3>Product Details</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Total Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var detail in Model)
+        {
+            <tr>
+                <td>@detail.Product.product_name</td>
+                <td>@detail.quantity</td>
+                <td>@detail.unit_price</td>
+                <td>@detail.total_price</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,44 @@
+﻿@model EBillingSoft.Models.Product
+
+@{
+    ViewBag.Title = "Create Product";
+}
+
+<h2>Create Product</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.product_name)
+        @Html.TextBoxFor(m => m.product_name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.product_name)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.description)
+        @Html.TextAreaFor(m => m.description, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.description)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.price)
+        @Html.TextBoxFor(m => m.price, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.price)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.stock_quantity)
+        @Html.TextBoxFor(m => m.stock_quantity, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.stock_quantity)
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+}
+
+@section Scripts {
+    <script>
+        console.log("Create Product page loaded.");
+    </script>
+}

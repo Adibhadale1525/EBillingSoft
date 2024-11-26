@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+
+<h2>Welcome to the E-Billing System</h2>
+
+<p>
+    
+    <a href="@Url.Action("GenerateBill", "Home")" class="btn btn-primary">Generate Invoice</a>
+</p>
+
+<h3>Available Products</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Stock Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.product_name</td>
+                <td>@product.description</td>
+                <td>@product.price</td>
+                <td>@product.stock_quantity</td>
+            </tr>
+        }
+    </tbody>
+</table>
