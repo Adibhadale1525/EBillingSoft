@@ -1,14 +1,132 @@
-﻿@model EBillingSoft.Models.Invoice
+﻿@using System.Globalization
+
+@model EBillingSoft.Models.Invoice
 
 @{
     ViewBag.Title = "Invoice Details";
 }
 
-<h2>Invoice Details</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJ4QTwM8UQ2RpC3I3f06N0cRj4FO3g8T7O2mhwkhbsbHIkFknvYg5vnfozF89" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
 
-<p><strong>Invoice ID:</strong> @Model.invoice_id</p>
-<p><strong>Invoice Date:</strong> @Model.invoice_date</p>
-<p><strong>Customer Name:</strong> @Model.customer_name</p>
-<p><strong>Total Amount:</strong> @Model.total_amount</p>
+        h2 {
+            text-align: center;
+            color: #4CAF50;
+            font-size: 36px;
+            margin-top: 30px;
+        }
 
-@Html.ActionLink("Back to Invoices", "Index")
+        .container {
+            padding: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .details {
+            font-size: 18px;
+            margin-top: 20px;
+            color: #333;
+        }
+
+            .details p {
+                margin-bottom: 15px;
+            }
+
+            .details strong {
+                color: #4CAF50;
+            }
+
+        .table th, .table td {
+            text-align: center;
+        }
+
+        .btn-back {
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            text-decoration: none;
+        }
+
+            .btn-back:hover {
+                background-color: #45a049;
+            }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Invoice Details</h2>
+
+        <div class="details">
+            <p><strong>Invoice ID:</strong> @Model.invoice_id</p>
+            <p><strong>Invoice Date:</strong> @Model.invoice_date.ToString("yyyy-MM-dd")</p> <!-- Format the date -->
+            <p><strong>Customer Name:</strong> @Model.customer_name</p>
+            <p><strong>Total Amount:</strong> @String.Format(new System.Globalization.CultureInfo("en-IN"), "{0:C}", Model.total_amount)</p> <!-- Format the amount as currency -->
+        </div>
+
+        <h3>Product Details</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Tax Amount</th>
+                    <th>Total Price (with Tax)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var detail in Model.InvoiceDetails)
+                {
+                    <tr>
+                        <td>@detail.Product.product_name</td>
+                        <td>@detail.quantity</td>
+                        <td>@String.Format(new System.Globalization.CultureInfo("en-IN"), "{0:C}", detail.unit_price)</td>
+                        <td>@String.Format(new System.Globalization.CultureInfo("en-IN"), "{0:C}", detail.tax_amount)</td>
+                        <td>@String.Format(new System.Globalization.CultureInfo("en-IN"), "{0:C}", detail.total_with_tax)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <a href="@Url.Action("Index", "Home")" class="btn-back">Back to Invoices</a>
+
+        <div class="footer">
+            <p>&copy; 2024 E-Billing Software | All rights reserved</p>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (Optional for better interactivity, if needed) -->
+    @*<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gyb6iBfGzFQ7y4m7rIW5iBv6g6zjNEa1G7uBz3sAe7pG4CkXFE" crossorigin="anonymous"></script>*@
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0lGyT6P66XZ39f9eNB2VsqEZZFJi5hPIyOwSuih3SckW7k5m" crossorigin="anonymous"></script>
+</body>
+</html>

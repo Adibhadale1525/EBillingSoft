@@ -2,15 +2,19 @@
 
 @{
     ViewBag.Title = "Invoice Details";
+    decimal grandTotal = 0; @* Declare grandTotal here *@
+    var indiaCulture = new System.Globalization.CultureInfo("hi-IN"); @* CultureInfo for India (INR) *@
 }
 
-<h2>Invoice Details</h2>
+<h2 class="page-title">Invoice Details</h2>
+
 <p><strong>Invoice ID:</strong> @ViewBag.Invoice.invoice_id</p>
 <p><strong>Customer Name:</strong> @ViewBag.Invoice.customer_name</p>
 <p><strong>Invoice Date:</strong> @ViewBag.Invoice.invoice_date</p>
 <p><strong>Total Amount:</strong> @ViewBag.Invoice.total_amount</p>
 
-<h3>Product Details</h3>
+<h3 class="section-title">Product Details</h3>
+
 <table class="table">
     <thead>
         <tr>
@@ -18,6 +22,8 @@
             <th>Quantity</th>
             <th>Unit Price</th>
             <th>Total Price</th>
+            <th>Tax Amount</th>
+            <th>Total with Tax</th>
         </tr>
     </thead>
     <tbody>
@@ -26,9 +32,82 @@
             <tr>
                 <td>@detail.Product.product_name</td>
                 <td>@detail.quantity</td>
-                <td>@detail.unit_price</td>
-                <td>@detail.total_price</td>
+                <td>@detail.unit_price.ToString("C", indiaCulture)</td>
+                <td>@detail.total_price.ToString("C", indiaCulture)</td>
+                <td>@detail.tax_amount.ToString("C", indiaCulture)</td>
+                <td>@detail.total_with_tax.ToString("C", indiaCulture)</td>
             </tr>
+
+            @* Accumulate the total price for each product in grandTotal *@
+            grandTotal += detail.total_with_tax; @* Adding the total price with tax for grand total *@
         }
+
+        <!-- Display the Grand Total -->
+        <tr>
+            <td colspan="5" style="text-align:right; font-weight: bold;">Grand Total:</td>
+            <td style="font-weight: bold;">@grandTotal.ToString("C", indiaCulture)</td>  @* Format as INR (₹) *@
+        </tr>
     </tbody>
 </table>
+
+<style>
+    /* General Styling */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f7fa;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .page-title {
+        text-align: center;
+        font-size: 2em;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .section-title {
+        font-size: 1.5em;
+        margin-top: 30px;
+        margin-bottom: 20px;
+        color: #444;
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 20px;
+        border-collapse: collapse;
+        background-color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+        .table th, .table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .table td {
+            background-color: #f9f9f9;
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table tr:nth-child(even) td {
+            background-color: #f2f2f2;
+        }
+
+        /* Grand Total Styling */
+        .table tfoot td {
+            text-align: right;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+</style>

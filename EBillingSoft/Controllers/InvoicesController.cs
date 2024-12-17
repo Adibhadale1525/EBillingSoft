@@ -12,7 +12,7 @@ namespace EBillingSoft.Controllers
 {
     public class InvoicesController : Controller
     {
-        private EBillingSoftEntities1 db = new EBillingSoftEntities1();
+        private EBillingSoftEntities2 db = new EBillingSoftEntities2();
 
         // GET: Invoices
         public ActionResult Index()

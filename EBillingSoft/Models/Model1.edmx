@@ -34,8 +34,17 @@
           <Property Name="description" Type="text" />
           <Property Name="price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="stock_quantity" Type="int" Nullable="false" />
+          <Property Name="tax_id" Type="int" />
         </EntityType>
-        <Association Name="FK__InvoiceDe__invoi__4D94879B">
+        <EntityType Name="Tax">
+          <Key>
+            <PropertyRef Name="tax_id" />
+          </Key>
+          <Property Name="tax_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="tax_name" Type="nvarchar" MaxLength="100" />
+          <Property Name="tax_percentage" Type="decimal" Precision="5" Scale="2" />
+        </EntityType>
+        <Association Name="FK__InvoiceDe__invoi__6754599E">
           <End Role="Invoice" Type="Self.Invoice" Multiplicity="0..1">
             <OnDelete Action="Cascade" />
           </End>
@@ -49,7 +58,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__InvoiceDe__produ__4E88ABD4">
+        <Association Name="FK__InvoiceDe__produ__68487DD7">
           <End Role="Product" Type="Self.Product" Multiplicity="0..1">
             <OnDelete Action="Cascade" />
           </End>
@@ -63,17 +72,34 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Product_Tax">
+          <End Role="Tax" Type="Self.Tax" Multiplicity="0..1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tax">
+              <PropertyRef Name="tax_id" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="tax_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="EBillingSoftModelStoreContainer">
           <EntitySet Name="Invoice" EntityType="Self.Invoice" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InvoiceDetails" EntityType="Self.InvoiceDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__InvoiceDe__invoi__4D94879B" Association="Self.FK__InvoiceDe__invoi__4D94879B">
+          <EntitySet Name="Tax" EntityType="Self.Tax" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__InvoiceDe__invoi__6754599E" Association="Self.FK__InvoiceDe__invoi__6754599E">
             <End Role="Invoice" EntitySet="Invoice" />
             <End Role="InvoiceDetails" EntitySet="InvoiceDetails" />
           </AssociationSet>
-          <AssociationSet Name="FK__InvoiceDe__produ__4E88ABD4" Association="Self.FK__InvoiceDe__produ__4E88ABD4">
+          <AssociationSet Name="FK__InvoiceDe__produ__68487DD7" Association="Self.FK__InvoiceDe__produ__68487DD7">
             <End Role="Product" EntitySet="Product" />
             <End Role="InvoiceDetails" EntitySet="InvoiceDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_Tax" Association="Self.FK_Product_Tax">
+            <End Role="Tax" EntitySet="Tax" />
+            <End Role="Product" EntitySet="Product" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -89,7 +115,7 @@
           <Property Name="invoice_date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="total_amount" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="customer_name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="InvoiceDetails" Relationship="Self.FK__InvoiceDe__invoi__4D94879B" FromRole="Invoice" ToRole="InvoiceDetails" />
+          <NavigationProperty Name="InvoiceDetails" Relationship="Self.FK__InvoiceDe__invoi__6754599E" FromRole="Invoice" ToRole="InvoiceDetails" />
         </EntityType>
         <EntityType Name="InvoiceDetail">
           <Key>
@@ -101,8 +127,8 @@
           <Property Name="quantity" Type="Int32" Nullable="false" />
           <Property Name="unit_price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="total_price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
-          <NavigationProperty Name="Invoice" Relationship="Self.FK__InvoiceDe__invoi__4D94879B" FromRole="InvoiceDetails" ToRole="Invoice" />
-          <NavigationProperty Name="Product" Relationship="Self.FK__InvoiceDe__produ__4E88ABD4" FromRole="InvoiceDetails" ToRole="Product" />
+          <NavigationProperty Name="Invoice" Relationship="Self.FK__InvoiceDe__invoi__6754599E" FromRole="InvoiceDetails" ToRole="Invoice" />
+          <NavigationProperty Name="Product" Relationship="Self.FK__InvoiceDe__produ__68487DD7" FromRole="InvoiceDetails" ToRole="Product" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -113,9 +139,20 @@
           <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="stock_quantity" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="InvoiceDetails" Relationship="Self.FK__InvoiceDe__produ__4E88ABD4" FromRole="Product" ToRole="InvoiceDetails" />
+          <Property Name="tax_id" Type="Int32" />
+          <NavigationProperty Name="InvoiceDetails" Relationship="Self.FK__InvoiceDe__produ__68487DD7" FromRole="Product" ToRole="InvoiceDetails" />
+          <NavigationProperty Name="Tax" Relationship="Self.FK_Product_Tax" FromRole="Product" ToRole="Tax" />
         </EntityType>
-        <Association Name="FK__InvoiceDe__invoi__4D94879B">
+        <EntityType Name="Tax">
+          <Key>
+            <PropertyRef Name="tax_id" />
+          </Key>
+          <Property Name="tax_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="tax_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="tax_percentage" Type="Decimal" Precision="5" Scale="2" />
+          <NavigationProperty Name="Products" Relationship="Self.FK_Product_Tax" FromRole="Tax" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK__InvoiceDe__invoi__6754599E">
           <End Role="Invoice" Type="Self.Invoice" Multiplicity="0..1">
             <OnDelete Action="Cascade" />
           </End>
@@ -129,7 +166,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__InvoiceDe__produ__4E88ABD4">
+        <Association Name="FK__InvoiceDe__produ__68487DD7">
           <End Role="Product" Type="Self.Product" Multiplicity="0..1">
             <OnDelete Action="Cascade" />
           </End>
@@ -143,17 +180,34 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="EBillingSoftEntities1" annotation:LazyLoadingEnabled="true">
+        <Association Name="FK_Product_Tax">
+          <End Role="Tax" Type="Self.Tax" Multiplicity="0..1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tax">
+              <PropertyRef Name="tax_id" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="tax_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EBillingSoftEntities2" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Invoices" EntityType="Self.Invoice" />
           <EntitySet Name="InvoiceDetails" EntityType="Self.InvoiceDetail" />
           <EntitySet Name="Products" EntityType="Self.Product" />
-          <AssociationSet Name="FK__InvoiceDe__invoi__4D94879B" Association="Self.FK__InvoiceDe__invoi__4D94879B">
+          <EntitySet Name="Taxes" EntityType="Self.Tax" />
+          <AssociationSet Name="FK__InvoiceDe__invoi__6754599E" Association="Self.FK__InvoiceDe__invoi__6754599E">
             <End Role="Invoice" EntitySet="Invoices" />
             <End Role="InvoiceDetails" EntitySet="InvoiceDetails" />
           </AssociationSet>
-          <AssociationSet Name="FK__InvoiceDe__produ__4E88ABD4" Association="Self.FK__InvoiceDe__produ__4E88ABD4">
+          <AssociationSet Name="FK__InvoiceDe__produ__68487DD7" Association="Self.FK__InvoiceDe__produ__68487DD7">
             <End Role="Product" EntitySet="Products" />
             <End Role="InvoiceDetails" EntitySet="InvoiceDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_Tax" Association="Self.FK_Product_Tax">
+            <End Role="Tax" EntitySet="Taxes" />
+            <End Role="Product" EntitySet="Products" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -161,7 +215,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="EBillingSoftModelStoreContainer" CdmEntityContainer="EBillingSoftEntities1">
+        <EntityContainerMapping StorageEntityContainer="EBillingSoftModelStoreContainer" CdmEntityContainer="EBillingSoftEntities2">
           <EntitySetMapping Name="Invoices">
             <EntityTypeMapping TypeName="EBillingSoftModel.Invoice">
               <MappingFragment StoreEntitySet="Invoice">
@@ -192,6 +246,16 @@
                 <ScalarProperty Name="description" ColumnName="description" />
                 <ScalarProperty Name="price" ColumnName="price" />
                 <ScalarProperty Name="stock_quantity" ColumnName="stock_quantity" />
+                <ScalarProperty Name="tax_id" ColumnName="tax_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Taxes">
+            <EntityTypeMapping TypeName="EBillingSoftModel.Tax">
+              <MappingFragment StoreEntitySet="Tax">
+                <ScalarProperty Name="tax_id" ColumnName="tax_id" />
+                <ScalarProperty Name="tax_name" ColumnName="tax_name" />
+                <ScalarProperty Name="tax_percentage" ColumnName="tax_percentage" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

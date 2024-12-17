@@ -20,7 +20,10 @@ namespace EBillingSoft.Models
         public int quantity { get; set; }
         public decimal unit_price { get; set; }
         public decimal total_price { get; set; }
-    
+
+        public decimal tax_amount { get; set; }        
+        public decimal total_with_tax { get; set; }
+
         public virtual Invoice Invoice { get; set; }
         public virtual Product Product { get; set; }
     }

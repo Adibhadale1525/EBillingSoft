@@ -12,23 +12,19 @@ namespace EBillingSoft.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Product
+    public partial class Tax
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Product()
+        public Tax()
         {
-            this.InvoiceDetails = new HashSet<InvoiceDetail>();
+            this.Products = new HashSet<Product>();
         }
     
-        public int product_id { get; set; }
-        public string product_name { get; set; }
-        public string description { get; set; }
-        public decimal price { get; set; }
-        public int stock_quantity { get; set; }
-        public Nullable<int> tax_id { get; set; }
+        public int tax_id { get; set; }
+        public string tax_name { get; set; }
+        public Nullable<decimal> tax_percentage { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<InvoiceDetail> InvoiceDetails { get; set; }
-        public virtual Tax Tax { get; set; }
+        public virtual ICollection<Product> Products { get; set; }
     }
 }

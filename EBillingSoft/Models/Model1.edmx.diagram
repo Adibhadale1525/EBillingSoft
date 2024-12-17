@@ -4,12 +4,14 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="9a3f0d05eeaf41adbf233074bfccf844" Name="Diagram1">
-        <EntityTypeShape EntityType="EBillingSoftModel.Invoice" Width="1.5" PointX="0.75" PointY="1.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="EBillingSoftModel.InvoiceDetail" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="EBillingSoftModel.Product" Width="1.5" PointX="0.75" PointY="5.125" IsExpanded="true" />
-        <AssociationConnector Association="EBillingSoftModel.FK__InvoiceDe__invoi__4D94879B" ManuallyRouted="false" />
-        <AssociationConnector Association="EBillingSoftModel.FK__InvoiceDe__produ__4E88ABD4" ManuallyRouted="false" />
+      <Diagram DiagramId="bfd89bd332f248b1b2dcc4c09a929e68" Name="Diagram1">
+        <EntityTypeShape EntityType="EBillingSoftModel.Invoice" Width="1.5" PointX="3" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EBillingSoftModel.InvoiceDetail" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="EBillingSoftModel.Product" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="EBillingSoftModel.Tax" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
+        <AssociationConnector Association="EBillingSoftModel.FK__InvoiceDe__invoi__6754599E" ManuallyRouted="false" />
+        <AssociationConnector Association="EBillingSoftModel.FK__InvoiceDe__produ__68487DD7" ManuallyRouted="false" />
+        <AssociationConnector Association="EBillingSoftModel.FK_Product_Tax" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

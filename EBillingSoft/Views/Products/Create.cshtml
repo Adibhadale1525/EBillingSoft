@@ -4,41 +4,134 @@
     ViewBag.Title = "Create Product";
 }
 
-<h2>Create Product</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - E-Billing System</title>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+        .form-group {
+            margin-bottom: 20px;
+        }
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.product_name)
-        @Html.TextBoxFor(m => m.product_name, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.product_name)
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+            .form-control:focus {
+                border-color: #4CAF50;
+                box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+            }
+
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+        }
+
+            .btn-primary:hover {
+                background-color: #45a049;
+            }
+
+        .text-danger {
+            color: #e74c3c;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #4CAF50;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Create Product</h2>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <!-- Product Name -->
+            <div class="form-group">
+                @Html.LabelFor(m => m.product_name)
+                @Html.TextBoxFor(m => m.product_name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.product_name, "", new { @class = "text-danger" })
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                @Html.LabelFor(m => m.description)
+                @Html.TextAreaFor(m => m.description, new { @class = "form-control", rows = 4 })
+                @Html.ValidationMessageFor(m => m.description, "", new { @class = "text-danger" })
+            </div>
+
+            <!-- Price -->
+            <div class="form-group">
+                @Html.LabelFor(m => m.price)
+                @Html.TextBoxFor(m => m.price, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.price, "", new { @class = "text-danger" })
+            </div>
+
+            <!-- Stock Quantity -->
+            <div class="form-group">
+                @Html.LabelFor(m => m.stock_quantity)
+                @Html.TextBoxFor(m => m.stock_quantity, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.stock_quantity, "", new { @class = "text-danger" })
+            </div>
+
+            
+            <!-- Tax -->
+            <div class="form-group">
+                @Html.LabelFor(m => m.tax_id, "Select Tax")
+                @Html.DropDownListFor(
+                    m => m.tax_id,
+                    new SelectList(ViewBag.TaxList, "tax_id", "tax_name"),  
+                    "-- Select Tax --",
+                    new { @class = "form-control" }
+                )
+                @Html.ValidationMessageFor(m => m.tax_id, "", new { @class = "text-danger" })
+            </div>
+
+
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        }
+
+        <div class="back-link">
+            @Html.ActionLink("Back to Product List", "Index", "Products")
+        </div>
     </div>
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.description)
-        @Html.TextAreaFor(m => m.description, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.description)
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.price)
-        @Html.TextBoxFor(m => m.price, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.price)
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.stock_quantity)
-        @Html.TextBoxFor(m => m.stock_quantity, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.stock_quantity)
-    </div>
-
-    <button type="submit" class="btn btn-primary">Create</button>
-}
-
-@section Scripts {
-    <script>
-        console.log("Create Product page loaded.");
-    </script>
-}
+    @section Scripts {
+        <script>
+            console.log("Create Product page loaded.");
+        </script>
+    }
+</body>
+</html>

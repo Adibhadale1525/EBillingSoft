@@ -13,10 +13,10 @@ namespace EBillingSoft.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class EBillingSoftEntities1 : DbContext
+    public partial class EBillingSoftEntities2 : DbContext
     {
-        public EBillingSoftEntities1()
-            : base("name=EBillingSoftEntities1")
+        public EBillingSoftEntities2()
+            : base("name=EBillingSoftEntities2")
         {
         }
     
@@ -28,5 +28,6 @@ namespace EBillingSoft.Models
         public virtual DbSet<Invoice> Invoices { get; set; }
         public virtual DbSet<InvoiceDetail> InvoiceDetails { get; set; }
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<Tax> Taxes { get; set; }
     }
 }

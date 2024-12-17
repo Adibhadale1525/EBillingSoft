@@ -2,32 +2,167 @@
     ViewBag.Title = "Home";
 }
 
-<h2>Welcome to the E-Billing System</h2>
-
-<p>
-    
-    <a href="@Url.Action("GenerateBill", "Home")" class="btn btn-primary">Generate Invoice</a>
-</p>
-
-<h3>Available Products</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Product Name</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Stock Quantity</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var product in Model)
-        {
-            <tr>
-                <td>@product.product_name</td>
-                <td>@product.description</td>
-                <td>@product.price</td>
-                <td>@product.stock_quantity</td>
-            </tr>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJ4QTwM8UQ2RpC3I3f06N0cRj4FO3g8T7O2mhwkhbsbHIkFknvYg5vnfozF89" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
         }
-    </tbody>
-</table>
+
+        h2 {
+            text-align: center;
+            color: #4CAF50;
+            font-size: 36px;
+            margin-top: 20px;
+        }
+
+        h3 {
+            text-align: center;
+            color: #333;
+            font-size: 28px;
+            margin-top: 30px;
+        }
+
+        .container {
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+       s-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            text-align: center;
+            color: #4CAF50;
+            font-size: 36px;
+            margin-top: 20px;
+        }
+
+        h3 {
+            text-align: center;
+            color: #333;
+            font-size: 28px;
+            margin-top: 30px;
+        }
+
+        .container {
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: #4CAF50;
+            border-color: #4CAF50;
+            font-weight: bold;
+        }
+
+            .btn-primary:hover {
+                background-color: #45a049;
+                border-color: #45a049;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+        }
+
+        td {
+            background-color: #f9f9f9;
+            color: #333;
+            font-size: 14px;
+        }
+
+            td:hover {
+                background-color: #f1f1f1;
+            }
+
+        .table-wrapper {
+            margin-top: 40px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Welcome to the Luxurious Perfume Store</h2>
+
+        <p class="text-center">
+            <a href="@Url.Action("GenerateBill", "Home")" class="btn btn-primary">Generate Invoice</a>
+        </p>
+
+        <h3>Available Products</h3>
+
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Stock Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in Model)
+                    {
+                        <tr>
+                            <td>@product.product_name</td>
+                            <td>@product.description</td>
+                            <td>@product.price</td>
+                            <td>@product.stock_quantity</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2024 Luxurious Perfume Store | All rights reserved</p>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (Optional for better interactivity, if needed) -->
+    @*<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gyb6iBfGzFQ7y4m7rIW5iBv6g6zjNEa1G7uBz3sAe7pG4CkXFE" crossorigin="anonymous"></script>*@
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0lGyT6P66XZ39f9eNB2VsqEZZFJi5hPIyOwSuih3SckW7k5m" crossorigin="anonymous"></script>
+</body>
+</html>
+

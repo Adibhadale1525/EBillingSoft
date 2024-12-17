@@ -1,29 +1,255 @@
-﻿@model EBillingSoft.Models.Product
-@{
+﻿@{
     ViewBag.Title = "Generate Bill";
 }
 
-<h2>Generate Bill</h2>
+<h2 class="page-title">Generate Bill</h2>
 
 @using (Html.BeginForm("GenerateBill", "Home", FormMethod.Post))
 {
-    @Html.AntiForgeryToken() 
+    @Html.AntiForgeryToken()
 
+    <!-- Customer Name Field -->
     <div class="form-group">
-        <label for="CustomerName">Customer Name</label>
-        <input type="text" name="customerName" class="form-control" required />
+        <label for="CustomerName" class="form-label">Customer Name</label>
+        <input type="text" name="customerName" class="form-control" placeholder="Enter customer name" required />
     </div>
+
+    <h3 class="section-title">Product Selection</h3>
+
+    <!-- Container for product entries -->
+    <div id="productEntries">
+        <div class="product-entry">
+            <div class="form-group">
+                <label for="ProductIds" class="form-label">Select Product</label>
+                @Html.DropDownList("product_id", ViewBag.Products as SelectList, "Select Product", new { @class = "form-control product-dropdown" })
+            </div>
+
+            <div class="form-group">
+                <label for="Quantities" class="form-label">Quantity</label>
+                <input type="number" name="quantities" class="form-control quantity-input" required min="1" />
+            </div>
+
+            <div class="form-group">
+                <label for="UnitPrice" class="form-label">Unit Price</label>
+                <input type="text" class="form-control unit-price" readonly />
+            </div>
+
+            <button type="button" class="btn btn-danger remove-product">Remove Product</button>
+        </div>
+    </div>
+
+    <!-- Total of all products -->
+    <div class="form-group">
+        <label for="GrandTotal" class="form-label">Grand Total</label>
+        <input type="text" id="grandTotal" class="form-control" readonly />
+    </div>
+
+    <button type="button" class="btn btn-success" id="addProduct">Add Another Product</button>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary submit-btn">Generate Invoice</button>
+}
+
+@* Include jQuery for dynamic interactions *@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+   $(document).ready(function () {
+    // Handle product dropdown change
+    $(document).on('change', '.product-dropdown', function () {
+        var selectedProductId = $(this).val();
+        var productRow = $(this).closest('.product-entry');
+
+        if (selectedProductId) {
+            // Make AJAX request to get product price and tax percentage
+            $.ajax({
+                url: '@Url.Action("GetProductDetails", "Home")',
+                type: 'GET',
+                data: { id: selectedProductId },
+                success: function (data) {
+                    if (data) {
+                        // Update unit price and recalculate grand total
+                        productRow.find('.unit-price').val(data.price);
+                        productRow.data('tax-percentage', data.tax_percentage); // Store tax percentage
+                        calculateGrandTotal();
+                    }
+                }
+            });
+        }
+    });
+
+    // Handle quantity change and recalculate grand total
+    $(document).on('keyup', '.quantity-input', function () {
+        calculateGrandTotal();
+    });
+
+    // Add another product entry
+    $('#addProduct').click(function () {
+        var productEntry = $('#productEntries .product-entry').first().clone();
+        productEntry.find('input').val(''); // Clear all values in the cloned product entry
+        $('#productEntries').append(productEntry);
+    });
+
+    // Remove a product entry
+    $(document).on('click', '.remove-product', function () {
+        $(this).closest('.product-entry').remove();
+        calculateGrandTotal(); // Recalculate grand total after removing a product
+    });
+
+    // Function to calculate grand total with tax
+    function calculateGrandTotal() {
+        var grandTotal = 0;
+
+        $('#productEntries .product-entry').each(function () {
+            var quantity = $(this).find('.quantity-input').val();
+            var unitPrice = $(this).find('.unit-price').val();
+            var taxPercentage = $(this).data('tax-percentage'); // Get tax percentage for the product
+
+            if (quantity && unitPrice) {
+                // Calculate the total price for the product
+                var totalPrice = quantity * unitPrice;
+
+                // Calculate tax amount
+                var taxAmount = 0;
+                if (taxPercentage) {
+                    taxAmount = (taxPercentage / 100) * totalPrice;
+                }
+
+                // Add the tax to the total price
+                var totalWithTax = totalPrice + taxAmount;
+
+                // Add to the grand total
+                grandTotal += totalWithTax;
+            }
+        });
+
+        // Update the grand total field
+        $('#grandTotal').val(grandTotal.toFixed(2));
+    }
+});
+</script>
+
+<style>
+    /* General Form Styling */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f7fa;
+    }
+
+    .page-title {
+        text-align: center;
+        font-size: 2em;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .section-title {
+        font-size: 1.5em;
+        margin-top: 30px;
+        margin-bottom: 20px;
+        color: #444;
+    }
+
+    .form-label {
+        font-weight: bold;
+        color: #555;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    .product-entry {
+        border: 1px solid #ddd;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        background-color: #fff;
+    }
+
+    .product-entry:last-child {
+        margin-bottom: 10px;
+    }
+
+    .product-entry .remove-product {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .product-entry .remove-product:hover {
+        background-color: #e53935;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .submit-btn {
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    #addProduct {
+        margin-top: 20px;
+        width: 100%;
+        background-color: #007bff;
+        color: white;
+    }
+
+    #addProduct:hover {
+        background-color: #0056b3;
+    }
 
     
-    <div class="form-group">
-        <label for="ProductIds">Select Products</label>
-        @Html.DropDownListFor(model => model.product_id, ViewBag.Products as SelectList, "Select Product", new { @class = "form-control" })
-    </div>
-
-    <div class="form-group">
-        <label for="Quantities">Enter Quantity</label>
-        <input type="number" name="quantities" class="form-control" required />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Generate Invoice</button>
-}
+    }
+</style>

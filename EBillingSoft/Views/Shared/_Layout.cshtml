@@ -4,11 +4,51 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewBag.Title - E-Billing System</title>
+    <!-- Link to Bootstrap CSS (via CDN or local) -->
     <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <style>
+        /* Custom styling for the navbar */
+        .navbar {
+            margin-bottom: 20px;
+            border-radius: 0;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #4CAF50 !important;
+        }
+
+        .navbar-nav > li > a {
+            color: #333 !important;
+            font-weight: 500;
+        }
+
+            .navbar-nav > li > a:hover {
+                color: #4CAF50 !important;
+            }
+
+        .main-content {
+            margin-top: 30px;
+        }
+
+        /* Add some padding to the page body */
+        body {
+            padding-top: 60px;
+        }
+
+        /* Optional: Add a footer */
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <div class="navbar navbar-default">
+        <!-- Navbar Section -->
+        <div class="navbar navbar-default navbar-fixed-top">
             <div class="navbar-header">
                 <a class="navbar-brand" href="/">E-Billing System</a>
             </div>
@@ -18,15 +58,23 @@
                 <li>@Html.ActionLink("Products", "Index", "Products")</li>
             </ul>
         </div>
+
+        <!-- Main Content Section -->
         <div class="main-content">
             @RenderBody()
         </div>
     </div>
 
-    
+    <!-- Render additional scripts if any -->
     @RenderSection("Scripts", required: false)
 
+    <!-- jQuery and Bootstrap JS -->
     <script src="~/Scripts/jquery-3.6.0.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <!-- Optional: Footer Section -->
+    <div class="footer">
+        <p>&copy; 2024 E-Billing Software | All rights reserved</p>
+    </div>
 </body>
 </html>
