@@ -34,6 +34,11 @@
                 <input type="text" class="form-control unit-price" readonly />
             </div>
 
+            <div class="form-group">
+                <label for="TotalPrice" class="form-label">Total Price</label>
+                <input type="text" class="form-control total-price" readonly />
+            </div>
+
             <button type="button" class="btn btn-danger remove-product">Remove Product</button>
         </div>
     </div>
@@ -54,79 +59,80 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-   $(document).ready(function () {
-    // Handle product dropdown change
-    $(document).on('change', '.product-dropdown', function () {
-        var selectedProductId = $(this).val();
-        var productRow = $(this).closest('.product-entry');
+    $(document).ready(function () {
+        // Handle product dropdown change
+        $(document).on('change', '.product-dropdown', function () {
+            var selectedProductId = $(this).val();
+            var productRow = $(this).closest('.product-entry');
 
-        if (selectedProductId) {
-            // Make AJAX request to get product price and tax percentage
-            $.ajax({
-                url: '@Url.Action("GetProductDetails", "Home")',
-                type: 'GET',
-                data: { id: selectedProductId },
-                success: function (data) {
-                    if (data) {
-                        // Update unit price and recalculate grand total
-                        productRow.find('.unit-price').val(data.price);
-                        productRow.data('tax-percentage', data.tax_percentage); // Store tax percentage
-                        calculateGrandTotal();
+            if (selectedProductId) {
+                // Make AJAX request to get product price
+                $.ajax({
+                    url: '@Url.Action("GetProductDetails", "Home")',
+                    type: 'GET',
+                    data: { id: selectedProductId },
+                    success: function (data) {
+                        if (data) {
+                            // Update unit price and recalculate total price for this row
+                            productRow.find('.unit-price').val(data.product);
+                            calculateTotalForRow(productRow); // Recalculate total price for this row
+                            calculateGrandTotal(); // Recalculate the grand total
+                        }
+                    },
+                    error: function () {
+                        alert("Failed to retrieve product details.");
                     }
-                }
-            });
-        }
-    });
-
-    // Handle quantity change and recalculate grand total
-    $(document).on('keyup', '.quantity-input', function () {
-        calculateGrandTotal();
-    });
-
-    // Add another product entry
-    $('#addProduct').click(function () {
-        var productEntry = $('#productEntries .product-entry').first().clone();
-        productEntry.find('input').val(''); // Clear all values in the cloned product entry
-        $('#productEntries').append(productEntry);
-    });
-
-    // Remove a product entry
-    $(document).on('click', '.remove-product', function () {
-        $(this).closest('.product-entry').remove();
-        calculateGrandTotal(); // Recalculate grand total after removing a product
-    });
-
-    // Function to calculate grand total with tax
-    function calculateGrandTotal() {
-        var grandTotal = 0;
-
-        $('#productEntries .product-entry').each(function () {
-            var quantity = $(this).find('.quantity-input').val();
-            var unitPrice = $(this).find('.unit-price').val();
-            var taxPercentage = $(this).data('tax-percentage'); // Get tax percentage for the product
-
-            if (quantity && unitPrice) {
-                // Calculate the total price for the product
-                var totalPrice = quantity * unitPrice;
-
-                // Calculate tax amount
-                var taxAmount = 0;
-                if (taxPercentage) {
-                    taxAmount = (taxPercentage / 100) * totalPrice;
-                }
-
-                // Add the tax to the total price
-                var totalWithTax = totalPrice + taxAmount;
-
-                // Add to the grand total
-                grandTotal += totalWithTax;
+                });
             }
         });
 
-        // Update the grand total field
-        $('#grandTotal').val(grandTotal.toFixed(2));
-    }
-});
+        // Handle quantity change and recalculate total price for the product
+        $(document).on('input', '.quantity-input', function () {
+            var productRow = $(this).closest('.product-entry');
+            calculateTotalForRow(productRow); // Recalculate total for this row
+            calculateGrandTotal(); // Recalculate grand total
+        });
+
+        // Add another product entry
+        $('#addProduct').click(function () {
+            var productEntry = $('#productEntries .product-entry').first().clone();
+            productEntry.find('input').val(''); // Clear all values in the cloned product entry
+            $('#productEntries').append(productEntry);
+        });
+
+        // Remove a product entry
+        $(document).on('click', '.remove-product', function () {
+            $(this).closest('.product-entry').remove();
+            calculateGrandTotal(); // Recalculate grand total after removing a product
+        });
+
+        // Function to calculate the total for a single row
+        function calculateTotalForRow(productRow) {
+            var quantity = productRow.find('.quantity-input').val();
+            var unitPrice = productRow.find('.unit-price').val();
+
+            if (quantity && unitPrice) {
+                var totalPrice = quantity * unitPrice;
+                productRow.find('.total-price').val(totalPrice.toFixed(2));
+            }
+        }
+
+        // Function to calculate the grand total for all products
+        function calculateGrandTotal() {
+            var grandTotal = 0;
+
+            $('#productEntries .product-entry').each(function () {
+                var totalPrice = $(this).find('.total-price').val();
+
+                if (totalPrice) {
+                    grandTotal += parseFloat(totalPrice);
+                }
+            });
+
+            // Update the grand total field
+            $('#grandTotal').val(grandTotal.toFixed(2));
+        }
+    });
 </script>
 
 <style>
@@ -169,11 +175,6 @@
         box-sizing: border-box;
     }
 
-    .form-control:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-    }
-
     .product-entry {
         border: 1px solid #ddd;
         padding: 20px;
@@ -182,29 +183,20 @@
         background-color: #fff;
     }
 
-    .product-entry:last-child {
-        margin-bottom: 10px;
-    }
-
-    .product-entry .remove-product {
-        background-color: #f44336;
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .product-entry .remove-product:hover {
-        background-color: #e53935;
-    }
+        .product-entry .remove-product {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
 
     .btn {
         padding: 10px 20px;
         border-radius: 5px;
         cursor: pointer;
         font-size: 16px;
-        transition: all 0.3s ease;
     }
 
     .btn-success {
@@ -212,31 +204,14 @@
         color: white;
     }
 
-    .btn-success:hover {
-        background-color: #218838;
-    }
-
     .btn-danger {
         background-color: #dc3545;
         color: white;
     }
 
-    .btn-danger:hover {
-        background-color: #c82333;
-    }
-
     .btn-primary {
         background-color: #007bff;
         color: white;
-    }
-
-    .btn-primary:hover {
-        background-color: #0056b3;
-    }
-
-    .submit-btn {
-        margin-top: 20px;
-        width: 100%;
     }
 
     #addProduct {
@@ -246,10 +221,8 @@
         color: white;
     }
 
-    #addProduct:hover {
-        background-color: #0056b3;
-    }
-
-    
+    .submit-btn {
+        margin-top: 20px;
+        width: 100%;
     }
 </style>

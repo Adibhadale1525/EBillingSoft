@@ -2,8 +2,8 @@
 
 @{
     ViewBag.Title = "Invoice Details";
-    decimal grandTotal = 0; @* Declare grandTotal here *@
-    var indiaCulture = new System.Globalization.CultureInfo("hi-IN"); @* CultureInfo for India (INR) *@
+    decimal grandTotal = 0;  // Declare grandTotal here
+    var indiaCulture = new System.Globalization.CultureInfo("hi-IN");  // CultureInfo for India (INR)
 }
 
 <h2 class="page-title">Invoice Details</h2>
@@ -39,10 +39,9 @@
             </tr>
 
             @* Accumulate the total price for each product in grandTotal *@
-            grandTotal += detail.total_with_tax; @* Adding the total price with tax for grand total *@
+            grandTotal += detail.total_with_tax;  // Adding the total price with tax for grand total
         }
 
-        <!-- Display the Grand Total -->
         <tr>
             <td colspan="5" style="text-align:right; font-weight: bold;">Grand Total:</td>
             <td style="font-weight: bold;">@grandTotal.ToString("C", indiaCulture)</td>  @* Format as INR (₹) *@
@@ -51,7 +50,6 @@
 </table>
 
 <style>
-    /* General Styling */
     body {
         font-family: Arial, sans-serif;
         background-color: #f4f7fa;
@@ -102,12 +100,5 @@
 
         .table tr:nth-child(even) td {
             background-color: #f2f2f2;
-        }
-
-        /* Grand Total Styling */
-        .table tfoot td {
-            text-align: right;
-            font-weight: bold;
-            font-size: 1.1em;
         }
 </style>
